@@ -11,6 +11,11 @@ THRESHOLD = 40      # packets per minute
 print(colored(f"Packet Threshold: {THRESHOLD} packets/minute", 'light_blue'))
 
 
+def flush_iptables():
+    print(colored("\nFlushing iptables rules and exiting...", 'light_blue'))
+    os.system("iptables -F")            # Flushing the rules made during execution
+    sys.exit(0)
+
 def packet_callback(packet):
     src_ip = packet[IP].src
     packet_count[src_ip] += 1
@@ -31,10 +36,6 @@ def packet_callback(packet):
         start_time[0] = current_time
 
 
-
-
-
-
 def main():
     if os.geteuid() != 0:       # checking root
         print("This script requires root privileges.")
@@ -48,8 +49,10 @@ def main():
     blocked_ips = set()
 
     print(colored("\nAnalyzing network traffic...", "light_blue"))
-    sniff(filter="ip", prn=packet_callback)
-
+    try:
+        sniff(filter="ip", prn=packet_callback)
+    except KeyboardInterrupt:
+        flush_iptables()
 
 if __name__ == "__main__":
     main()
