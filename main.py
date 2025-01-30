@@ -51,7 +51,9 @@ def main():
     print(colored("\nAnalyzing network traffic...", "light_blue"))
     try:
         sniff(filter="ip", prn=packet_callback)
-    except KeyboardInterrupt:
+    # except KeyboardInterrupt:
+    #     flush_iptables()                  # will implement ctrl + c
+    finally:
         flush_iptables()
 
 if __name__ == "__main__":
