@@ -40,9 +40,9 @@ def main():
         print("This script requires root privileges.")
         sys.exit(1)
 
-    packet_count = defaultdict(int)
-    start_time = [time.time()]
-    blocked_ips = set()
+    global packet_count = defaultdict(int)
+    global start_time = [time.time()]
+    global blocked_ips = set()
 
     print(colored("\nAnalyzing network traffic...", "light_blue"))
     sniff(filter="ip", prn=packet_callback)
