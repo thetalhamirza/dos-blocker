@@ -12,7 +12,7 @@ print(colored(f"Packet Threshold: {THRESHOLD} packets/minute", 'light_blue'))
 
 
 def restore_iptables():
-    print(colored("\nFlushing iptables rules and exiting...", 'light_blue'))
+    print(colored("\nRestoring previous firewall state and exiting...", 'light_blue'))
     os.system("iptables-restore < /tmp/iptables_backup.rules")            # Restoring previous iptables state
     sys.exit(0)
 
