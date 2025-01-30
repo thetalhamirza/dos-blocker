@@ -7,13 +7,13 @@ from colorama import init
 from termcolor import colored
 
 init()
-THRESHOLD = 40      # packets per minute
+THRESHOLD = 40      # packets per second
 print(colored(f"Packet Threshold: {THRESHOLD} packets/minute", 'light_blue'))
 
 
-def flush_iptables():
+def restore_iptables():
     print(colored("\nFlushing iptables rules and exiting...", 'light_blue'))
-    os.system("iptables -F")            # Flushing the rules made during execution
+    os.system("iptables-restore < /tmp/iptables_backup.rules")            # Restoring previous iptables state
     sys.exit(0)
 
 def packet_callback(packet):
@@ -29,6 +29,7 @@ def packet_callback(packet):
             # print(f"IP: {ip}, Packet rate: {packet_rate}")        # verbose
             if packet_rate > THRESHOLD and ip not in blocked_ips:
                 print(colored(f"Blocked IP: {ip}, Packet rate: {packet_rate}", 'red'))
+                os.system("iptables-save > /tmp/iptables_backup.rules")             # Saving current iptables state
                 os.system(f"iptables -A INPUT -s {ip} -j DROP")
                 blocked_ips.add(ip)
 
@@ -51,10 +52,10 @@ def main():
     print(colored("\nAnalyzing network traffic...", "light_blue"))
     try:
         sniff(filter="ip", prn=packet_callback)
-    # except KeyboardInterrupt:
-    #     flush_iptables()                  # will implement ctrl + c
+    except KeyboardInterrupt:
+        restore_iptables()                  # will implement ctrl + c
     finally:
-        flush_iptables()
+        restore_iptables()
 
 if __name__ == "__main__":
     main()
