@@ -30,6 +30,15 @@ Run the script with root privileges:
 sudo python3 dos_blocker.py
 ```
 
+Run the tester script to send packets to your IP:
+
+```bash
+sudo python3 dos_tester.py
+```
+
+Check out the tester script repository: https://github.com/thetalhamirza/dos-tester
+
+
 ### Stopping the Script
 
 - Press `Ctrl+C` or close the terminal.
