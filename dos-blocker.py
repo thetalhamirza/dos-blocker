@@ -7,8 +7,8 @@ from colorama import init
 from termcolor import colored
 
 init()
-THRESHOLD = 40      # packets per second
-print(colored(f"Packet Threshold: {THRESHOLD} packets/minute", 'light_blue'))
+THRESHOLD = 20      # packets per second
+print(colored(f"Packet Threshold: {THRESHOLD} packets/second", 'light_blue'))
 
 
 def restore_iptables():
